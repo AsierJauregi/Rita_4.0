@@ -2556,7 +2556,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.08
+  m_Radius: 0.12
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &483544268
 PrefabInstance:
@@ -3220,7 +3220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDetectorTag: PlayerDetector
-  attackDistance: 0.3
+  attackDistance: 1
   attackCooldown: 1.5
 --- !u!114 &622623367
 MonoBehaviour:
@@ -3236,7 +3236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerDetectorTag: PlayerDetector
   chaseSpeed: 4
-  stoppingDistance: 0.5
+  stoppingDistance: 2
   groundDetectionDistance: 0.15
   whatIsJumpable:
     serializedVersion: 2
@@ -3255,7 +3255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   route: {fileID: 1739707334}
   playerDetectorTag: PlayerDetector
-  patrolSpeed: 2
+  patrolSpeed: 3
 --- !u!54 &622623369
 Rigidbody:
   m_ObjectHideFlags: 0
