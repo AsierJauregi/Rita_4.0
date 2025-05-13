@@ -108,6 +108,15 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Atacar"",
+                    ""type"": ""Button"",
+                    ""id"": ""04f54dd4-8c6d-470d-a249-449a8028dd5b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -253,6 +262,17 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""action"": ""Mover"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""950d213d-b3d6-4b9a-919c-19851fbbf2c2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Atacar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -263,6 +283,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Saltar = m_Gameplay.FindAction("Saltar", throwIfNotFound: true);
         m_Gameplay_Mover = m_Gameplay.FindAction("Mover", throwIfNotFound: true);
+        m_Gameplay_Atacar = m_Gameplay.FindAction("Atacar", throwIfNotFound: true);
     }
 
     ~@Controles()
@@ -345,6 +366,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_Gameplay_Saltar;
     private readonly InputAction m_Gameplay_Mover;
+    private readonly InputAction m_Gameplay_Atacar;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -364,6 +386,10 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Mover".
         /// </summary>
         public InputAction @Mover => m_Wrapper.m_Gameplay_Mover;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Atacar".
+        /// </summary>
+        public InputAction @Atacar => m_Wrapper.m_Gameplay_Atacar;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -396,6 +422,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Mover.started += instance.OnMover;
             @Mover.performed += instance.OnMover;
             @Mover.canceled += instance.OnMover;
+            @Atacar.started += instance.OnAtacar;
+            @Atacar.performed += instance.OnAtacar;
+            @Atacar.canceled += instance.OnAtacar;
         }
 
         /// <summary>
@@ -413,6 +442,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Mover.started -= instance.OnMover;
             @Mover.performed -= instance.OnMover;
             @Mover.canceled -= instance.OnMover;
+            @Atacar.started -= instance.OnAtacar;
+            @Atacar.performed -= instance.OnAtacar;
+            @Atacar.canceled -= instance.OnAtacar;
         }
 
         /// <summary>
@@ -467,5 +499,12 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMover(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Atacar" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAtacar(InputAction.CallbackContext context);
     }
 }

@@ -1,3 +1,5 @@
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -19,6 +21,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float radioDeteccion;
     [SerializeField] private LayerMask queEsSuelo;
 
+    [Header("Ataque")]
+    [SerializeField] private Transform puntoAtaque;
+    [SerializeField] private float radioAtaque;
+    [SerializeField] private LayerMask queEsEnemigo;
+    [SerializeField] private float danhoAtaque;
+    [SerializeField] private float timeBtwAttacks;
+    private float timer = 0;
+
     private Animator anim;
 
 
@@ -26,7 +36,35 @@ public class PlayerMovement : MonoBehaviour
     {
         inputManager.OnSaltar += Saltar;
         inputManager.OnMover += Mover;
+        inputManager.OnAtacar += Atacar;
     }
+
+
+    private void Atacar()
+    {
+        anim.SetTrigger("attack");
+        Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
+
+        if (enemigosDetectados.Length > 0 && timer >= timeBtwAttacks)
+        {
+            // Solo atacamos al primer enemigo detectado
+            GameObject enemigo = enemigosDetectados[0].gameObject;
+
+            // Obtenemos el componente con la lógica del enemigo
+            Enemy enemigoScript = enemigo.GetComponent<Enemy>();
+            if (enemigoScript != null)
+            {
+                enemigoScript.QuitarVida(danhoAtaque); 
+                timer = 0;
+            }
+        }
+        else
+        {
+            Debug.Log("No hay enemigos al alcance");
+        }
+
+    }
+
 
     private void Mover(Vector2 ctx)
     {
@@ -55,7 +93,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Movement();
-        
+
+        timer += Time.deltaTime;
     }
 
     private void Movement()
@@ -102,5 +141,12 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocidadVertical * Time.deltaTime);
         //Multiplico ambas veces por Time.deltaTime porque es una aceleración (s^2)
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        //Área de ataque
+        Gizmos.DrawSphere(puntoAtaque.position, radioAtaque);
     }
 }

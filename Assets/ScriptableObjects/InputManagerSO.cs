@@ -11,6 +11,7 @@ public class InputManagerSO : ScriptableObject
     Controles misControles;
     public event System.Action OnSaltar;
     public event Action<Vector2> OnMover;
+    public event System.Action OnAtacar;
     private void OnEnable()
     {
         misControles = new Controles();
@@ -18,6 +19,13 @@ public class InputManagerSO : ScriptableObject
         misControles.Gameplay.Saltar.started += Saltar;
         misControles.Gameplay.Mover.performed += Mover;
         misControles.Gameplay.Mover.canceled += Mover;
+
+        misControles.Gameplay.Atacar.started += Atacar;
+    }
+
+    private void Atacar(InputAction.CallbackContext obj)
+    {
+        OnAtacar?.Invoke();
     }
 
     private void Mover(InputAction.CallbackContext ctx)
