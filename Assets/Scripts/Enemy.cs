@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+
     [SerializeField] private float vida;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
         
     }
 
+
     public void QuitarVida(float danho)
     {
         vida -= danho;
@@ -25,4 +27,5 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
 }
