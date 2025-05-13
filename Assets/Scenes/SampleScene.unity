@@ -2650,7 +2650,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb9451fe6bc7c2d41a82a2d52584c0f5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.024299145
+      value: 0.176
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb9451fe6bc7c2d41a82a2d52584c0f5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2687,6 +2687,14 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fb9451fe6bc7c2d41a82a2d52584c0f5, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2198888584636164399, guid: fb9451fe6bc7c2d41a82a2d52584c0f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.00012
+      objectReference: {fileID: 0}
+    - target: {fileID: -2198888584636164399, guid: fb9451fe6bc7c2d41a82a2d52584c0f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00683
       objectReference: {fileID: 0}
     - target: {fileID: -2198888584636164399, guid: fb9451fe6bc7c2d41a82a2d52584c0f5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3220,7 +3228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDetectorTag: PlayerDetector
-  attackDistance: 1
+  attackDistance: 2.5
   attackCooldown: 1.5
 --- !u!114 &622623367
 MonoBehaviour:
@@ -3237,10 +3245,11 @@ MonoBehaviour:
   playerDetectorTag: PlayerDetector
   chaseSpeed: 4
   stoppingDistance: 2
-  groundDetectionDistance: 0.15
+  groundDetectionDistance: 0.3
   whatIsJumpable:
     serializedVersion: 2
     m_Bits: 8
+  isChasing: 0
 --- !u!114 &622623368
 MonoBehaviour:
   m_ObjectHideFlags: 0

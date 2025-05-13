@@ -11,8 +11,9 @@ public class ChaseState : State<EnemyController>
     [SerializeField] private float stoppingDistance;
     private float chasingDistance;
 
-    [SerializeField] private float groundDetectionDistance = 0.15f;
+    [SerializeField] private float groundDetectionDistance = 0.3f;
     [SerializeField] private LayerMask whatIsJumpable;
+    public bool isChasing = false;
     public override void OnEnterState(EnemyController controller)
     {
         base.OnEnterState(controller);
@@ -44,8 +45,8 @@ public class ChaseState : State<EnemyController>
 
     private void Move()
     {
-        
-        if(Physics.Raycast(transform.position, Vector3.down, groundDetectionDistance, whatIsJumpable))
+        isChasing = Physics.Raycast(transform.position, Vector3.down, groundDetectionDistance, whatIsJumpable);
+        if (Physics.Raycast(transform.position, Vector3.down, groundDetectionDistance, whatIsJumpable))
         {
             Debug.Log("Chase");
             transform.Translate(Vector3.right * chaseSpeed * Time.deltaTime);
