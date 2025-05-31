@@ -100,12 +100,12 @@ public class PlayerMovement : MonoBehaviour
     private void Movement()
     {
         direccionMovimiento = new Vector2(direccionInput.x, 0);
-        controller.Move(direccionMovimiento * horizontalSpeed * Time.deltaTime);
+        controller.Move(-direccionMovimiento * horizontalSpeed * Time.deltaTime);
 
         if (direccionMovimiento.magnitude != 0)
         {
             anim.SetBool("running", true);
-            if (direccionMovimiento.x > 0)
+            if (direccionMovimiento.x < 0)
             {
                 transform.eulerAngles = Vector3.zero;
             }
