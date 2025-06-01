@@ -63,10 +63,4 @@ public class Robot_Sphere : Enemy, ICanAttack
             lockedOn = false;
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        //Área de ataque
-        Gizmos.DrawSphere(attackPoint.transform.position, 0.5f);
-    }
 }

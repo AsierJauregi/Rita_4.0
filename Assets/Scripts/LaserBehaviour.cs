@@ -14,14 +14,11 @@ public class LaserBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.gameObject.name + " ha sido impactado");
        if (other.gameObject.CompareTag(playerTag))
         {
             Debug.Log("Rita hit");
             Destroy(gameObject);
-        }
-       else if (other.gameObject.layer == LayerMask.NameToLayer("Suelo"))
-        {
-
         }
     }
 }

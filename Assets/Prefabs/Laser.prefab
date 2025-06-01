@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1052454268951729231}
   - component: {fileID: 732670086398232265}
+  - component: {fileID: 2864401325738694017}
   m_Layer: 0
   m_Name: Laser
   m_TagString: Untagged
@@ -47,6 +48,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 30
   playerTag: Player
+  queEsSuelo:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!136 &2864401325738694017
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314497179628204458}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.12
+  m_Height: 1.21
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6805821821985087221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56,16 +83,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 1052454268951729231}
     m_Modifications:
     - target: {fileID: 4074910196788096397, guid: caae153e88abbaa44a912e12e77cd5a7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5745831
+      objectReference: {fileID: 0}
+    - target: {fileID: 4074910196788096397, guid: caae153e88abbaa44a912e12e77cd5a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4074910196788096397, guid: caae153e88abbaa44a912e12e77cd5a7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.000000033528
       objectReference: {fileID: 0}
     - target: {fileID: 4074910196788096397, guid: caae153e88abbaa44a912e12e77cd5a7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.0048892
       objectReference: {fileID: 0}
     - target: {fileID: 4074910196788096397, guid: caae153e88abbaa44a912e12e77cd5a7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -99,7 +130,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: LaserBeam
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2490520092408866258, guid: caae153e88abbaa44a912e12e77cd5a7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
