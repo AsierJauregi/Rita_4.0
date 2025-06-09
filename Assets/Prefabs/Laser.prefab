@@ -46,11 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad51cecce235e84f8e9c6a5eb76884c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 20
   playerTag: Player
-  queEsSuelo:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!136 &2864401325738694017
 CapsuleCollider:
   m_ObjectHideFlags: 0
