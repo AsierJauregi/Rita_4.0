@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform pies;
     [SerializeField] private float radioDeteccion;
     [SerializeField] private LayerMask queEsSuelo;
+    private bool estoyEnElAire = false;
 
     [Header("Ataque")]
     [SerializeField] private Transform puntoAtaque;
@@ -28,7 +30,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float danhoAtaque;
     [SerializeField] private float timeBtwAttacks;
     [SerializeField] private GameObject efectoDescarga;
+    private bool estaAtacando = false;
     private float timer = 0;
+    private float timerBool = 0;
 
     private Animator anim;
 
@@ -43,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Atacar()
     {
+        estaAtacando = true;
         anim.SetTrigger("attack");
         Invoke(nameof(ReproducirDescarga), 0.5f);
         Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
@@ -64,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("No hay enemigos al alcance");
         }
+
 
     }
 
@@ -97,11 +103,35 @@ public class PlayerMovement : MonoBehaviour
         Movement();
 
         timer += Time.deltaTime;
+
+        if (estaAtacando)
+        {
+            Debug.Log("Ataca");
+            timerBool += Time.deltaTime;
+            if (timerBool >= 1.5f)
+            {
+                Debug.Log("ya no ataca");
+                estaAtacando = false;
+                timerBool = 0;
+            }
+        }
+        
     }
 
     private void Movement()
     {
-        direccionMovimiento = new Vector2(direccionInput.x, 0);
+        if (estaAtacando)
+        {
+            if (EstoyEnSuelo()) 
+            {
+                direccionMovimiento = new Vector2(0, 0);
+            }           
+        }
+        else
+        {
+            direccionMovimiento = new Vector2(direccionInput.x, 0);
+        }
+           
         controller.Move(-direccionMovimiento * horizontalSpeed * Time.deltaTime);
 
         if (direccionMovimiento.magnitude != 0)
