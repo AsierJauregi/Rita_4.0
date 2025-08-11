@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask queEsEnemigo;
     [SerializeField] private float danhoAtaque;
     [SerializeField] private float timeBtwAttacks;
+    [SerializeField] private GameObject efectoDescarga;
     private float timer = 0;
 
     private Animator anim;
@@ -43,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
     private void Atacar()
     {
         anim.SetTrigger("attack");
+        Invoke(nameof(ReproducirDescarga), 0.5f);
         Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
 
         if (enemigosDetectados.Length > 0 && timer >= timeBtwAttacks)
@@ -148,5 +150,10 @@ public class PlayerMovement : MonoBehaviour
     {
         //Área de ataque
         Gizmos.DrawSphere(puntoAtaque.position, radioAtaque);
+    }
+
+    public void ReproducirDescarga()
+    {
+        Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
     }
 }
