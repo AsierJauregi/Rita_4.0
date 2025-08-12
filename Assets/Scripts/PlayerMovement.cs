@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -8,156 +9,76 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    [SerializeField] private float horizontalSpeed;
+    [Header("Movimiento")]
+    [SerializeField] private float horizontalSpeed = 5f;
     [SerializeField] private InputManagerSO inputManager;
-    [SerializeField] private float factorGravedad;
-    [SerializeField] private float alturaDeSalto;
+    [SerializeField] private float factorGravedad = -7f; // prueba entre -5 y -9.8
+    [SerializeField] private float alturaDeSalto = 2f;
 
     private Vector2 direccionInput;
     private Vector2 direccionMovimiento;
-    private Vector2 velocidadVertical;
+    private Vector3 velocidadVertical; // y se usa para salto/gravedad
     private CharacterController controller;
+    private Animator anim;
 
     [Header("Detección suelo")]
     [SerializeField] private Transform pies;
-    [SerializeField] private float radioDeteccion;
+    [SerializeField] private float radioDeteccion = 0.15f;
     [SerializeField] private LayerMask queEsSuelo;
 
     [Header("Ataque")]
     [SerializeField] private Transform puntoAtaque;
-    [SerializeField] private float radioAtaque;
+    [SerializeField] private float radioAtaque = 1f;
     [SerializeField] private LayerMask queEsEnemigo;
-    [SerializeField] private float danhoAtaque;
-    [SerializeField] private float timeBtwAttacks;
+    [SerializeField] private float danhoAtaque = 10f;
+    [SerializeField] private float timeBtwAttacks = 0.6f;
     [SerializeField] private GameObject efectoDescarga;
     [SerializeField] private GameObject efectoLatigo;
     private bool estaAtacando = false;
-    private float timer = 0;
-    private float timerBool = 0;
+    private float timer = 0f;
+    private float timerBool = 0f;
 
-    [Header("Tail")]
-    [SerializeField] private float rangoSwing;
+    [Header("Tail - Swing (pendulum)")]
+    [SerializeField] private float rangoSwing = 3f;
     [SerializeField] private LayerMask queEsSwingPoint;
+    [SerializeField] private float swingDamping = 0.7f;        // amortiguamiento (0 = sin fricción)
+    [SerializeField] private float swingInputStrength = 6f;   // cuánto empuja el input
+    [SerializeField] private float swingInitialImpulse = 1.0f;// pequeña patada inicial
+    [SerializeField] private float swingMaxAngleDeg = 60f;    // ángulo máximo ± en grados
     private bool seColumpia = false;
-    private Transform puntoSwing;
+    private Transform swingPoint;     // pivot
+    private float swingLength = 2f;   // L
+    private float swingAngle = 0f;    // theta en radianes
+    private float angularVelocity = 0f; // omega
 
-    private Animator anim;
-
+    // lanzamiento tras soltar la liana
+    private Vector3 launchVelocity = Vector3.zero;
+    [SerializeField] private float launchDrag = 2.5f;
 
     private void OnEnable()
     {
         inputManager.OnSaltar += Saltar;
         inputManager.OnMover += Mover;
         inputManager.OnAtacar += Atacar;
-        inputManager.OnTail += Tail;
+        inputManager.OnTail += Tail; // tu evento de cola
     }
 
-    private void Tail()
+    private void OnDisable()
     {
-        Invoke(nameof(ReproducirLatigo), 1.2f);
-
-        if (seColumpia) return;
-
-        Collider[] swingPoints = Physics.OverlapSphere(transform.position, rangoSwing, queEsSwingPoint);
-        if(swingPoints.Length > 0)
-        {
-            IniciarSwing(swingPoints[0].transform);
-        }
-        else
-        {
-            AtacarConCola();
-        }
+        inputManager.OnSaltar -= Saltar;
+        inputManager.OnMover -= Mover;
+        inputManager.OnAtacar -= Atacar;
+        inputManager.OnTail -= Tail;
     }
 
-    private void AtacarConCola()
-    {
-        anim.SetTrigger("tailAttack");
-    }
-
-    private void IniciarSwing(Transform punto)
-    {
-        seColumpia = true;
-        puntoSwing = punto;
-        anim.SetBool("isSwinging", true);
-
-        StartCoroutine(SwingCoroutine());
-    }
-
-    private IEnumerator SwingCoroutine()
-    {
-        float tiempoSwing = 1.5f;
-        float t = 0;
-
-        while (t < tiempoSwing)
-        {
-            t += Time.deltaTime;
-            Vector3 dir = (puntoSwing.position - transform.position).normalized;
-            controller.Move(dir * horizontalSpeed * Time.deltaTime);
-            yield return null;
-        }
-
-        anim.SetBool("isSwinging", false);
-        seColumpia = false;
-    }
-
-
-    private void Atacar()
-    {
-        estaAtacando = true;
-        anim.SetTrigger("attack");
-        Invoke(nameof(ReproducirDescarga), 0.5f);
-        Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
-
-        if (enemigosDetectados.Length > 0 && timer >= timeBtwAttacks)
-        {
-            // Solo atacamos al primer enemigo detectado
-            GameObject enemigo = enemigosDetectados[0].gameObject;
-
-            // Obtenemos el componente con la lógica del enemigo
-            Enemy enemigoScript = enemigo.GetComponent<Enemy>();
-            if (enemigoScript != null)
-            {
-                enemigoScript.QuitarVida(danhoAtaque); 
-                timer = 0;
-            }
-        }
-        else
-        {
-            Debug.Log("No hay enemigos al alcance");
-        }
-
-
-    }
-
-
-    private void Mover(Vector2 ctx)
-    {
-        direccionInput = new Vector2(ctx.x, 0);
-    }
-
-    private void Saltar()
-    {
-        if (EstoyEnSuelo())
-        {
-            Debug.Log("Saltar");
-            velocidadVertical.y = Mathf.Sqrt(-2 * factorGravedad * alturaDeSalto);
-            //y = sqrt(-2 * g * h)
-            anim.SetTrigger("jump");
-        }
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Movement();
-
         timer += Time.deltaTime;
 
         if (estaAtacando)
@@ -166,87 +87,311 @@ public class PlayerMovement : MonoBehaviour
             if (timerBool >= 1.5f)
             {
                 estaAtacando = false;
-                timerBool = 0;
+                timerBool = 0f;
             }
         }
-        
+
+        // Aplicar comportamiento según estado
+        if (seColumpia)
+            BalanceoPendulo();
+        else
+            Movement();
+
+        // Reducir gradualmente la launchVelocity (drag)
+        if (launchVelocity.sqrMagnitude > 0.0001f)
+        {
+            launchVelocity.x = Mathf.MoveTowards(launchVelocity.x, 0f, launchDrag * Time.deltaTime);
+            // la componente y ya cae por gravedad (velocidadVertical) — la dejamos
+        }
     }
 
+    // -------------------------------
+    // MOVIMIENTO NORMAL (usa launchVelocity)
+    // -------------------------------
     private void Movement()
     {
-        if (estaAtacando)
-        {
-            if (EstoyEnSuelo()) 
-            {
-                direccionMovimiento = new Vector2(0, 0);
-            }           
-        }
+        if (estaAtacando && EstoyEnSuelo())
+            direccionMovimiento = Vector2.zero;
         else
-        {
-            direccionMovimiento = new Vector2(direccionInput.x, 0);
-        }
-           
-        controller.Move(-direccionMovimiento * horizontalSpeed * Time.deltaTime);
+            direccionMovimiento = new Vector2(direccionInput.x, 0f);
 
-        if (direccionMovimiento.magnitude != 0)
+        // Combinar input horizontal con cualquier impulso horizontal residual
+        float vx = direccionMovimiento.x * horizontalSpeed + launchVelocity.x;
+        float vy = velocidadVertical.y + launchVelocity.y;
+
+        Vector3 desplazamiento = new Vector3(vx, vy, 0f) * Time.deltaTime;
+        controller.Move(desplazamiento);
+
+        // Anim y flip
+        if (Mathf.Abs(direccionMovimiento.x) > 0.01f)
         {
             anim.SetBool("running", true);
-            if (direccionMovimiento.x < 0)
-            {
-                transform.eulerAngles = Vector3.zero;
-            }
-            else
-            {
-                transform.eulerAngles = new Vector3(0, 180, 0);
-            }
+            if (direccionMovimiento.x > 0) transform.eulerAngles = Vector3.zero;
+            else transform.eulerAngles = new Vector3(0, 180, 0);
         }
         else
         {
             anim.SetBool("running", false);
         }
 
-        if (EstoyEnSuelo() && velocidadVertical.y < 0)
+        // Si estamos en suelo y cayendo, reseteamos vertical
+        if (EstoyEnSuelo() && velocidadVertical.y < 0f)
         {
-            //Si he aterrizado reseteo la velocidad vertical
-            velocidadVertical.y = 0;
-            anim.ResetTrigger("jump"); //Para que no se acumulen triggers
+            velocidadVertical.y = 0f;
+            anim.ResetTrigger("jump");
         }
+
         AplicarGravedad();
     }
 
-
-    private bool EstoyEnSuelo()
+    private void Mover(Vector2 ctx)
     {
-        return Physics.CheckSphere(pies.position, radioDeteccion, queEsSuelo);
-        //Devuelve un bool para saber si estoy en el suelo o en el aire
+        direccionInput = ctx;
+    }
+
+    private void Saltar()
+    {
+        if (!seColumpia && EstoyEnSuelo())
+        {
+            // reset antes de saltar
+            velocidadVertical.y = 0f;
+            launchVelocity.y = 0f;
+            velocidadVertical.y = Mathf.Sqrt(-2f * factorGravedad * alturaDeSalto);
+            anim.SetTrigger("jump");
+        }
+        else if (seColumpia)
+        {
+            // soltar desde la liana con impulso derivado del péndulo
+            SoltarDesdeSwing();
+        }
     }
 
     private void AplicarGravedad()
     {
-      
+        // gravedad al movimiento normal y al launch vertical
         velocidadVertical.y += factorGravedad * Time.deltaTime;
-
-        controller.Move(velocidadVertical * Time.deltaTime);
-        //Multiplico ambas veces por Time.deltaTime porque es una aceleración (s^2)
+        launchVelocity.y += factorGravedad * Time.deltaTime;
     }
 
-
-    private void OnDrawGizmos()
+    private bool EstoyEnSuelo()
     {
-        //Área de ataque
-        Gizmos.DrawSphere(puntoAtaque.position, radioAtaque);
+        return Physics.CheckSphere(pies.position, radioDeteccion, queEsSuelo);
+    }
+
+    // -------------------------------
+    // ATAQUE NORMAL
+    // -------------------------------
+    private void Atacar()
+    {
+        if (seColumpia) return;
+
+        if (timer < timeBtwAttacks) return;
+
+        estaAtacando = true;
+        anim.SetTrigger("attack");
+        Invoke(nameof(ReproducirDescarga), 0.5f);
+
+        Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
+        if (enemigosDetectados.Length > 0)
+        {
+            Enemy enemigoScript = enemigosDetectados[0].GetComponent<Enemy>();
+            if (enemigoScript != null)
+            {
+                enemigoScript.QuitarVida(danhoAtaque);
+                timer = 0f;
+            }
+        }
     }
 
     public void ReproducirDescarga()
     {
-        Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
+        if (efectoDescarga) Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
     }
 
     public void ReproducirLatigo()
     {
-        Debug.Log("Ataco");
-        Quaternion rotacion = Quaternion.Euler(0, 0, -90);
-        Instantiate(efectoLatigo, puntoAtaque.position, rotacion);
+        if (efectoLatigo) Instantiate(efectoLatigo, puntoAtaque.position, Quaternion.Euler(0, 0, -90));
     }
-    
+
+    // -------------------------------
+    // TAIL: Swing o ataque especial
+    // -------------------------------
+    private void Tail()
+    {
+        if (!seColumpia)
+        {
+            Collider[] puntos = Physics.OverlapSphere(puntoAtaque.position, rangoSwing, queEsSwingPoint);
+            if (puntos.Length > 0)
+            {
+                // iniciar péndulo: configurar con la posición real del jugador
+                swingPoint = puntos[0].transform;
+                seColumpia = true;
+                anim.SetBool("isSwinging", true);
+
+                swingLength = Vector3.Distance(transform.position, swingPoint.position);
+                if (swingLength < 0.2f) swingLength = 0.5f;
+
+                // calcular ángulo inicial (relación con vertical)
+                float dx = transform.position.x - swingPoint.position.x;         // lateral
+                float dy = swingPoint.position.y - transform.position.y;         // vertical "hacia abajo"
+                swingAngle = Mathf.Atan2(dx, dy); // ángulo respecto a vertical hacia abajo
+
+                // velocidad angular inicial (pequeño empujón)
+                angularVelocity = swingInitialImpulse * Mathf.Sign(direccionInput.x != 0 ? direccionInput.x : dx);
+
+                // limpiar launchVelocity para que no interfiera
+                launchVelocity = Vector3.zero;
+            }
+            else
+            {
+                // no hay punto -> ataque especial con cola
+                AtaqueEspecial();
+            }
+        }
+        else
+        {
+            // si ya estaba columpiando -> soltar
+            SoltarDesdeSwing();
+        }
+    }
+
+    private void AtaqueEspecial()
+    {
+        if (timer < timeBtwAttacks) return;
+
+        estaAtacando = true;
+        anim.SetTrigger("tailAttack");
+        Invoke(nameof(ReproducirLatigo), 1.2f);
+
+        Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
+        if (enemigosDetectados.Length > 0)
+        {
+            Enemy enemigoScript = enemigosDetectados[0].GetComponent<Enemy>();
+            if (enemigoScript != null)
+            {
+                enemigoScript.QuitarVida(danhoAtaque);
+                timer = 0f;
+            }
+        }
+    }
+
+    // -------------------------------
+    // BALANCEO (péndulo con límite de ángulo)
+    // -------------------------------
+    private void BalanceoPendulo()
+    {
+        if (swingPoint == null)
+        {
+            seColumpia = false;
+            anim.SetBool("isSwinging", false);
+            return;
+        }
+
+        float dt = Time.deltaTime;
+        float g = Mathf.Abs(factorGravedad);
+        float L = Mathf.Max(0.1f, swingLength);
+        float theta = swingAngle;
+
+        // ecuación angular (pendulum): alpha = -(g/L) * sin(theta)
+        float alpha = -(g / L) * Mathf.Sin(theta);
+
+        // input lateral añade torque (dirección del input)
+        alpha += direccionInput.x * swingInputStrength;
+
+        // integrar omega con damping
+        angularVelocity += alpha * dt;
+        angularVelocity *= (1f - swingDamping * dt);
+
+        // integrar theta
+        swingAngle += angularVelocity * dt;
+
+        // limitar ángulo a rango ±max (en radianes)
+        float maxAngle = Mathf.Clamp(swingMaxAngleDeg, 5f, 179f) * Mathf.Deg2Rad;
+        if (swingAngle > maxAngle)
+        {
+            swingAngle = maxAngle;
+            if (angularVelocity > 0f) angularVelocity = -angularVelocity * 0.25f; // rebote apagado
+        }
+        else if (swingAngle < -maxAngle)
+        {
+            swingAngle = -maxAngle;
+            if (angularVelocity < 0f) angularVelocity = -angularVelocity * 0.25f;
+        }
+
+        // calcular posición del jugador usando L y theta (en 2D X,Y)
+        Vector3 r = new Vector3(Mathf.Sin(swingAngle) * L, -Mathf.Cos(swingAngle) * L, 0f);
+        Vector3 targetPos = swingPoint.position + r;
+
+        Vector3 delta = targetPos - transform.position;
+
+        // limitar paso por frame para evitar teletransportes
+        float maxStep = Mathf.Max(0.02f, horizontalSpeed * 4f * dt);
+        if (delta.magnitude > maxStep)
+            delta = delta.normalized * maxStep;
+
+        controller.Move(delta);
+
+        // flip del sprite según movimiento horizontal del delta
+        if (delta.x < 0) transform.eulerAngles = new Vector3(0, 180, 0);
+        else if (delta.x > 0) transform.eulerAngles = Vector3.zero;
+    }
+
+    // -------------------------------
+    // SOLTAR: convertir omega en velocidad lineal y salir
+    // -------------------------------
+    private void SoltarDesdeSwing()
+    {
+        if (!seColumpia) return;
+
+        // vector r actual
+        float L = Mathf.Max(0.1f, swingLength);
+        Vector3 r = new Vector3(Mathf.Sin(swingAngle) * L, -Mathf.Cos(swingAngle) * L, 0f);
+
+        // velocidad lineal = omega x r (en 2D)
+        Vector3 vLin = angularVelocity * new Vector3(-r.y, r.x, 0f);
+
+        // asignamos launchVelocity (se usa en Movement)
+        launchVelocity = vLin;
+
+        // reset y normal de salto para que el impulso vertical tenga efecto
+        velocidadVertical.y = 0f;
+
+        // limpiar estado de swing
+        seColumpia = false;
+        anim.SetBool("isSwinging", false);
+        swingPoint = null;
+        swingLength = 0f;
+        swingAngle = 0f;
+        angularVelocity = 0f;
+    }
+
+    // -------------------------------
+    // GIZMOS para debug
+    // -------------------------------
+    private void OnDrawGizmos()
+    {
+        if (puntoAtaque)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(puntoAtaque.position, radioAtaque);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(puntoAtaque.position, rangoSwing);
+        }
+
+        if (pies)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(pies.position, radioDeteccion);
+        }
+
+        if (seColumpia && swingPoint != null)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(swingPoint.position, transform.position);
+            Gizmos.DrawWireSphere(swingPoint.position, 0.08f);
+        }
+    }
 }
+
+
