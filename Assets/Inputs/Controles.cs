@@ -117,6 +117,15 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Tail"",
+                    ""type"": ""Button"",
+                    ""id"": ""82975fbe-b1eb-496f-a930-aff798f73169"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -273,6 +282,17 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""action"": ""Atacar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53e70e41-620f-4784-b4eb-1f3d85820462"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tail"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -284,6 +304,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         m_Gameplay_Saltar = m_Gameplay.FindAction("Saltar", throwIfNotFound: true);
         m_Gameplay_Mover = m_Gameplay.FindAction("Mover", throwIfNotFound: true);
         m_Gameplay_Atacar = m_Gameplay.FindAction("Atacar", throwIfNotFound: true);
+        m_Gameplay_Tail = m_Gameplay.FindAction("Tail", throwIfNotFound: true);
     }
 
     ~@Controles()
@@ -367,6 +388,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Saltar;
     private readonly InputAction m_Gameplay_Mover;
     private readonly InputAction m_Gameplay_Atacar;
+    private readonly InputAction m_Gameplay_Tail;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -390,6 +412,10 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Atacar".
         /// </summary>
         public InputAction @Atacar => m_Wrapper.m_Gameplay_Atacar;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Tail".
+        /// </summary>
+        public InputAction @Tail => m_Wrapper.m_Gameplay_Tail;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -425,6 +451,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Atacar.started += instance.OnAtacar;
             @Atacar.performed += instance.OnAtacar;
             @Atacar.canceled += instance.OnAtacar;
+            @Tail.started += instance.OnTail;
+            @Tail.performed += instance.OnTail;
+            @Tail.canceled += instance.OnTail;
         }
 
         /// <summary>
@@ -445,6 +474,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Atacar.started -= instance.OnAtacar;
             @Atacar.performed -= instance.OnAtacar;
             @Atacar.canceled -= instance.OnAtacar;
+            @Tail.started -= instance.OnTail;
+            @Tail.performed -= instance.OnTail;
+            @Tail.canceled -= instance.OnTail;
         }
 
         /// <summary>
@@ -506,5 +538,12 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAtacar(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Tail" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTail(InputAction.CallbackContext context);
     }
 }

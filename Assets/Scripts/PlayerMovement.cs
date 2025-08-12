@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -21,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform pies;
     [SerializeField] private float radioDeteccion;
     [SerializeField] private LayerMask queEsSuelo;
-    private bool estoyEnElAire = false;
 
     [Header("Ataque")]
     [SerializeField] private Transform puntoAtaque;
@@ -30,9 +30,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float danhoAtaque;
     [SerializeField] private float timeBtwAttacks;
     [SerializeField] private GameObject efectoDescarga;
+    [SerializeField] private GameObject efectoLatigo;
     private bool estaAtacando = false;
     private float timer = 0;
     private float timerBool = 0;
+
+    [Header("Tail")]
+    [SerializeField] private float rangoSwing;
+    [SerializeField] private LayerMask queEsSwingPoint;
+    private bool seColumpia = false;
+    private Transform puntoSwing;
 
     private Animator anim;
 
@@ -42,6 +49,55 @@ public class PlayerMovement : MonoBehaviour
         inputManager.OnSaltar += Saltar;
         inputManager.OnMover += Mover;
         inputManager.OnAtacar += Atacar;
+        inputManager.OnTail += Tail;
+    }
+
+    private void Tail()
+    {
+        Invoke(nameof(ReproducirLatigo), 1.2f);
+
+        if (seColumpia) return;
+
+        Collider[] swingPoints = Physics.OverlapSphere(transform.position, rangoSwing, queEsSwingPoint);
+        if(swingPoints.Length > 0)
+        {
+            IniciarSwing(swingPoints[0].transform);
+        }
+        else
+        {
+            AtacarConCola();
+        }
+    }
+
+    private void AtacarConCola()
+    {
+        anim.SetTrigger("tailAttack");
+    }
+
+    private void IniciarSwing(Transform punto)
+    {
+        seColumpia = true;
+        puntoSwing = punto;
+        anim.SetBool("isSwinging", true);
+
+        StartCoroutine(SwingCoroutine());
+    }
+
+    private IEnumerator SwingCoroutine()
+    {
+        float tiempoSwing = 1.5f;
+        float t = 0;
+
+        while (t < tiempoSwing)
+        {
+            t += Time.deltaTime;
+            Vector3 dir = (puntoSwing.position - transform.position).normalized;
+            controller.Move(dir * horizontalSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        anim.SetBool("isSwinging", false);
+        seColumpia = false;
     }
 
 
@@ -106,11 +162,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (estaAtacando)
         {
-            Debug.Log("Ataca");
             timerBool += Time.deltaTime;
             if (timerBool >= 1.5f)
             {
-                Debug.Log("ya no ataca");
                 estaAtacando = false;
                 timerBool = 0;
             }
@@ -160,6 +214,7 @@ public class PlayerMovement : MonoBehaviour
         AplicarGravedad();
     }
 
+
     private bool EstoyEnSuelo()
     {
         return Physics.CheckSphere(pies.position, radioDeteccion, queEsSuelo);
@@ -186,4 +241,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
     }
+
+    public void ReproducirLatigo()
+    {
+        Debug.Log("Ataco");
+        Quaternion rotacion = Quaternion.Euler(0, 0, -90);
+        Instantiate(efectoLatigo, puntoAtaque.position, rotacion);
+    }
+    
 }
