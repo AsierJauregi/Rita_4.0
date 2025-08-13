@@ -23,28 +23,29 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Detección suelo")]
     [SerializeField] private Transform pies;
-    [SerializeField] private float radioDeteccion = 0.15f;
+    [SerializeField] private float radioDeteccion;
     [SerializeField] private LayerMask queEsSuelo;
 
     [Header("Ataque")]
     [SerializeField] private Transform puntoAtaque;
-    [SerializeField] private float radioAtaque = 1f;
+    [SerializeField] private float radioAtaque;
     [SerializeField] private LayerMask queEsEnemigo;
-    [SerializeField] private float danhoAtaque = 10f;
-    [SerializeField] private float timeBtwAttacks = 0.6f;
+    [SerializeField] private float danhoAtaque;
+    [SerializeField] private float timeBtwAttacks;
     [SerializeField] private GameObject efectoDescarga;
     [SerializeField] private GameObject efectoLatigo;
     private bool estaAtacando = false;
     private float timer = 0f;
     private float timerBool = 0f;
 
-    [Header("Tail - Swing (pendulum)")]
-    [SerializeField] private float rangoSwing = 3f;
+    [Header("Tail - Balanceo")]
+    [SerializeField] private float rangoSwing;
     [SerializeField] private LayerMask queEsSwingPoint;
-    [SerializeField] private float swingDamping = 0.7f;        // amortiguamiento (0 = sin fricción)
-    [SerializeField] private float swingInputStrength = 6f;   // cuánto empuja el input
-    [SerializeField] private float swingInitialImpulse = 1.0f;// pequeña patada inicial
-    [SerializeField] private float swingMaxAngleDeg = 60f;    // ángulo máximo ± en grados
+    [SerializeField] private float swingDamping;        // amortiguamiento (0 = sin fricción)
+    [SerializeField] private float swingInputStrength;   // cuánto empuja el input
+    [SerializeField] private float swingInitialImpulse;// pequeña patada inicial
+    [SerializeField] private float swingMaxAngleDeg;    // ángulo máximo ± en grados
+    [SerializeField] private float swingSpeedMult;       // multiplicador para reducir la velocidad de balanceo
     private bool seColumpia = false;
     private Transform swingPoint;     // pivot
     private float swingLength = 2f;   // L
@@ -53,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     // lanzamiento tras soltar la liana
     private Vector3 launchVelocity = Vector3.zero;
-    [SerializeField] private float launchDrag = 2.5f;
+    [SerializeField] private float launchDrag;
 
     private void OnEnable()
     {
@@ -303,7 +304,7 @@ public class PlayerMovement : MonoBehaviour
         angularVelocity *= (1f - swingDamping * dt);
 
         // integrar theta
-        swingAngle += angularVelocity * dt;
+        swingAngle += angularVelocity * dt * swingSpeedMult;
 
         // limitar ángulo a rango ±max (en radianes)
         float maxAngle = Mathf.Clamp(swingMaxAngleDeg, 5f, 179f) * Mathf.Deg2Rad;
@@ -349,6 +350,13 @@ public class PlayerMovement : MonoBehaviour
 
         // velocidad lineal = omega x r (en 2D)
         Vector3 vLin = angularVelocity * new Vector3(-r.y, r.x, 0f);
+
+        //Limito la velocidad máxima de lanzamiento
+        float maxLaunchSpeed = 6f;
+        if (vLin.magnitude > maxLaunchSpeed)
+        {
+            vLin = vLin.normalized * maxLaunchSpeed;
+        }
 
         // asignamos launchVelocity (se usa en Movement)
         launchVelocity = vLin;
