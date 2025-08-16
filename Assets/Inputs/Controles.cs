@@ -126,6 +126,15 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""VisionNocturna"",
+                    ""type"": ""Button"",
+                    ""id"": ""c0d5b2ec-8a25-4636-bb62-6641141bb9aa"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -293,6 +302,17 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""action"": ""Tail"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7717607c-f3e0-4448-a001-3c71fa42f65c"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VisionNocturna"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -305,6 +325,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         m_Gameplay_Mover = m_Gameplay.FindAction("Mover", throwIfNotFound: true);
         m_Gameplay_Atacar = m_Gameplay.FindAction("Atacar", throwIfNotFound: true);
         m_Gameplay_Tail = m_Gameplay.FindAction("Tail", throwIfNotFound: true);
+        m_Gameplay_VisionNocturna = m_Gameplay.FindAction("VisionNocturna", throwIfNotFound: true);
     }
 
     ~@Controles()
@@ -389,6 +410,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Mover;
     private readonly InputAction m_Gameplay_Atacar;
     private readonly InputAction m_Gameplay_Tail;
+    private readonly InputAction m_Gameplay_VisionNocturna;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -416,6 +438,10 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Tail".
         /// </summary>
         public InputAction @Tail => m_Wrapper.m_Gameplay_Tail;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/VisionNocturna".
+        /// </summary>
+        public InputAction @VisionNocturna => m_Wrapper.m_Gameplay_VisionNocturna;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -454,6 +480,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Tail.started += instance.OnTail;
             @Tail.performed += instance.OnTail;
             @Tail.canceled += instance.OnTail;
+            @VisionNocturna.started += instance.OnVisionNocturna;
+            @VisionNocturna.performed += instance.OnVisionNocturna;
+            @VisionNocturna.canceled += instance.OnVisionNocturna;
         }
 
         /// <summary>
@@ -477,6 +506,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Tail.started -= instance.OnTail;
             @Tail.performed -= instance.OnTail;
             @Tail.canceled -= instance.OnTail;
+            @VisionNocturna.started -= instance.OnVisionNocturna;
+            @VisionNocturna.performed -= instance.OnVisionNocturna;
+            @VisionNocturna.canceled -= instance.OnVisionNocturna;
         }
 
         /// <summary>
@@ -545,5 +577,12 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTail(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "VisionNocturna" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnVisionNocturna(InputAction.CallbackContext context);
     }
 }

@@ -335,6 +335,7 @@ public class PlayerMovement : MonoBehaviour
         // flip del sprite según movimiento horizontal del delta
         if (delta.x < 0) transform.eulerAngles = new Vector3(0, 180, 0);
         else if (delta.x > 0) transform.eulerAngles = Vector3.zero;
+
     }
 
     // -------------------------------
@@ -371,6 +372,7 @@ public class PlayerMovement : MonoBehaviour
         swingLength = 0f;
         swingAngle = 0f;
         angularVelocity = 0f;
+
     }
 
     // -------------------------------

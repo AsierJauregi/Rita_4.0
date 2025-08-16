@@ -13,6 +13,7 @@ public class InputManagerSO : ScriptableObject
     public event Action<Vector2> OnMover;
     public event System.Action OnAtacar;
     public event System.Action OnTail;
+    public event System.Action OnVisionNocturna;
     private void OnEnable()
     {
         misControles = new Controles();
@@ -23,14 +24,20 @@ public class InputManagerSO : ScriptableObject
 
         misControles.Gameplay.Atacar.started += Atacar;
         misControles.Gameplay.Tail.started += Tail;
+        misControles.Gameplay.VisionNocturna.started += VisionNocturna;
     }
 
-    private void Tail (InputAction.CallbackContext obj)
+    private void VisionNocturna(InputAction.CallbackContext ctx)
+    {
+        OnVisionNocturna?.Invoke();
+    }
+
+    private void Tail (InputAction.CallbackContext ctx)
     {
         OnTail?.Invoke();
     }
 
-    private void Atacar(InputAction.CallbackContext obj)
+    private void Atacar(InputAction.CallbackContext ctx)
     {
         OnAtacar?.Invoke();
     }
