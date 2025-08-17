@@ -72,11 +72,12 @@ GameObject:
   m_Component:
   - component: {fileID: 3712697749475137802}
   - component: {fileID: 5801679671315528936}
+  - component: {fileID: 7341572932239502818}
   - component: {fileID: 2877272376051155397}
   - component: {fileID: 431000791974362628}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,6 +129,35 @@ MonoBehaviour:
     m_Bits: 64
   danhoAtaque: 10
   timeBtwAttacks: 0.6
+  efectoDescarga: {fileID: 7834434380170384362, guid: 68101499d07aced4aa0ded4acb624942, type: 3}
+  efectoLatigo: {fileID: 3958596659431381315, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+  rangoSwing: 5
+  queEsSwingPoint:
+    serializedVersion: 2
+    m_Bits: 128
+  swingDamping: 0.6
+  swingInputStrength: 8
+  swingInitialImpulse: 1.2
+  swingMaxAngleDeg: 60
+  swingSpeedMult: 0.2
+  launchDrag: 3
+--- !u!114 &7341572932239502818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105989960478491133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c860c6c5c1846b14ea795410a524685f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 11400000, guid: 5b093c909ec41bb48a43cd66a5a6f7e7, type: 2}
+  nightVisionVolume: {fileID: 0}
+  darknessVolume: {fileID: 0}
+  spotLight: {fileID: 0}
+  tieneGafas: 1
 --- !u!54 &2877272376051155397
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -173,13 +203,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.8
+  m_Height: 2.5
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 1.3, z: 0}
 --- !u!1 &5792254851472670276
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +262,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2.8
+  m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 1.3, z: 0}
 --- !u!1001 &2304009089101447872

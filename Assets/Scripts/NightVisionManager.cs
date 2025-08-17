@@ -20,10 +20,12 @@ public class NightVisionManager : MonoBehaviour
     {
         if (nightVisionVolume != null)
         {
+            nightVisionVolume.gameObject.SetActive(true);
             nightVisionVolume.enabled = false;
         }
         if (darknessVolume != null)
         {
+            darknessVolume.gameObject.SetActive(true);
             darknessVolume.enabled = false;
         }
     }
@@ -54,10 +56,6 @@ public class NightVisionManager : MonoBehaviour
         {
             darknessVolume.enabled = true;
         }
-        //if (nightVisionVolume != null)
-        //{
-        //    nightVisionVolume.enabled = false;
-        //}
     }
 
     public void SalirZonaOscura()
