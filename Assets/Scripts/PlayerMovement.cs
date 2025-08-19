@@ -94,9 +94,14 @@ public class PlayerMovement : MonoBehaviour
 
         // Aplicar comportamiento según estado
         if (seColumpia)
+        {
             BalanceoPendulo();
+        }
         else
+        {
             Movement();
+        }
+            
 
         // Reducir gradualmente la launchVelocity (drag)
         if (launchVelocity.sqrMagnitude > 0.0001f)
@@ -112,9 +117,13 @@ public class PlayerMovement : MonoBehaviour
     private void Movement()
     {
         if (estaAtacando && EstoyEnSuelo())
+        {
             direccionMovimiento = Vector2.zero;
+        }
         else
+        {
             direccionMovimiento = new Vector2(direccionInput.x, 0f);
+        }
 
         // Combinar input horizontal con cualquier impulso horizontal residual
         float vx = direccionMovimiento.x * horizontalSpeed + launchVelocity.x;
@@ -192,6 +201,15 @@ public class PlayerMovement : MonoBehaviour
         anim.SetTrigger("attack");
         Invoke(nameof(ReproducirDescarga), 0.5f);
 
+    }
+
+    public void ReproducirDescarga()
+    {
+        if (efectoDescarga) 
+        {
+            Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
+        }
+
         Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
         if (enemigosDetectados.Length > 0)
         {
@@ -204,15 +222,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void ReproducirDescarga()
-    {
-        if (efectoDescarga) Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
-    }
-
-    public void ReproducirLatigo()
-    {
-        if (efectoLatigo) Instantiate(efectoLatigo, puntoAtaque.position, Quaternion.Euler(0, 0, -90));
-    }
 
     // -------------------------------
     // TAIL: Swing o ataque especial
@@ -263,6 +272,15 @@ public class PlayerMovement : MonoBehaviour
         estaAtacando = true;
         anim.SetTrigger("tailAttack");
         Invoke(nameof(ReproducirLatigo), 1.2f);
+
+    }
+
+    public void ReproducirLatigo()
+    {
+        if (efectoLatigo)
+        {
+            Instantiate(efectoLatigo, puntoAtaque.position, Quaternion.Euler(0, 0, -90));
+        }
 
         Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
         if (enemigosDetectados.Length > 0)

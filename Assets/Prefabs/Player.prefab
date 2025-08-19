@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 3712697749475137802}
   - component: {fileID: 5801679671315528936}
   - component: {fileID: 7341572932239502818}
+  - component: {fileID: 4367984604743517068}
   - component: {fileID: 2877272376051155397}
   - component: {fileID: 431000791974362628}
   m_Layer: 0
@@ -156,8 +157,24 @@ MonoBehaviour:
   inputManager: {fileID: 11400000, guid: 5b093c909ec41bb48a43cd66a5a6f7e7, type: 2}
   nightVisionVolume: {fileID: 0}
   darknessVolume: {fileID: 0}
-  spotLight: {fileID: 0}
-  tieneGafas: 1
+  tieneGafas: 0
+--- !u!114 &4367984604743517068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105989960478491133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d326ac17a9db34648874a7bd36ac9345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rangoInteraccion: 1
+  capaInteractuable:
+    serializedVersion: 2
+    m_Bits: 2048
+  puntoInteraccion: {fileID: 3096453361682347392}
 --- !u!54 &2877272376051155397
 Rigidbody:
   m_ObjectHideFlags: 0
