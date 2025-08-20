@@ -6,7 +6,7 @@ public class EnemyAI : MonoBehaviour
     private State currentState;
 
     [Header("Referencias")]
-    [SerializeField] Transform player;
+    [SerializeField] PlayerLife player;
     [SerializeField] Transform[] waypoints;
 
     [Header("Datos")]
@@ -65,7 +65,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         // Cambiar de estado
-        if (Vector3.Distance(transform.position, player.position) < detectionRange)
+        if (Vector3.Distance(transform.position, player.transform.position) < detectionRange)
         {
             currentState = State.Chase;
         }
@@ -75,11 +75,11 @@ public class EnemyAI : MonoBehaviour
     private void Chase()
     {
         // Movimiento hacia el jugador
-        Vector3 dir = (player.position - transform.position).normalized;
+        Vector3 dir = (player.transform.position - transform.position).normalized;
         transform.position += new Vector3(dir.x, 0, 0) * chaseSpeed * Time.deltaTime;
 
         // Mirar hacia el jugador
-        if (player.position.x > transform.position.x)
+        if (player.transform.position.x > transform.position.x)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
@@ -89,7 +89,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         // Cambiar de estado
-        float dist = Vector3.Distance(transform.position, player.position);
+        float dist = Vector3.Distance(transform.position, player.transform.position);
 
         if (dist < attackRange)
         {
@@ -109,10 +109,11 @@ public class EnemyAI : MonoBehaviour
         {
             attackTimer = 0;
             Debug.Log("El enemigo ataca");
+            player.QuitarVida();
         }
 
         // Mirar hacia el jugador
-        if (player.position.x > transform.position.x)
+        if (player.transform.position.x > transform.position.x)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
@@ -122,7 +123,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         // Cambiar de estado
-        float dist = Vector3.Distance(transform.position, player.position);
+        float dist = Vector3.Distance(transform.position, player.transform.position);
 
         if (dist > attackRange)
         {

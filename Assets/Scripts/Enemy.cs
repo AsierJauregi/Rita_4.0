@@ -9,15 +9,11 @@ public class Enemy : MonoBehaviour
     {
         vida -= danho;
         Debug.Log("Vida restante: " + vida);
+
         if (vida <= 0)
         {
             Destroy(this.gameObject);          
         }
-    }
-
-    private void Eliminar()
-    {
-        Destroy(this.gameObject);
     }
 
 }
