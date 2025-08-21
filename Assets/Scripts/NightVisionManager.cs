@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class NightVisionManager : MonoBehaviour
 {
     [SerializeField] private InputManagerSO inputManager;
     [SerializeField] private Volume nightVisionVolume;
     [SerializeField] private Volume darknessVolume;
+    [SerializeField] private Image iconoVisionNocturna;
 
     [SerializeField] private bool tieneGafas = false;
     private bool nightVisionOn = false;
@@ -77,5 +79,6 @@ public class NightVisionManager : MonoBehaviour
     public void RecogerGafas()
     {
         tieneGafas = true;
+        iconoVisionNocturna.gameObject.SetActive(true);
     }
 }

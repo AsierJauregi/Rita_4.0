@@ -29,7 +29,7 @@ public class EnemyAI : MonoBehaviour
             waypoints[i].SetParent(null);  // Desemparento los waypoints para que no se muevan con el prefab
         }
 
-        attackTimer = attackCooldown;  // Para que pueda atacar nada más llegar
+        attackTimer = 1.5f;  // No puede atacar nada más llegar, pero tampoco debe esperar todo el cooldown
     }
 
     void Update()

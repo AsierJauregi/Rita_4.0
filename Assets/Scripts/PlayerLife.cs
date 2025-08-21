@@ -71,9 +71,25 @@ public class PlayerLife : MonoBehaviour
 
     private IEnumerator DamageFlashRoutine()
     {
-        damageOverlay.color = flashColor;
+        // Fade in
+        float timer = 0f;
+        while (timer < flashDuration / 2f)
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(0, 0.5f, timer / (flashDuration / 2f));  // alpha va de 0 a 0.5 de opacidad
+            damageOverlay.color = new Color(1, 0, 0, alpha);
+            yield return null;
+        }
 
-        yield return new WaitForSeconds(flashDuration);
+        // Fade out
+        timer = 0f;
+        while (timer < flashDuration / 2f)
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(0.5f, 0, timer / (flashDuration / 2f));  // efecto contrario
+            damageOverlay.color = new Color(1, 0, 0, alpha);
+            yield return null;
+        }
 
         damageOverlay.color = Color.clear;
     }

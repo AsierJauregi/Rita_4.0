@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float radioAtaque;
     [SerializeField] private LayerMask queEsEnemigo;
     [SerializeField] private float danhoAtaque;
+    [SerializeField] private float danhoAtaqueEspecial;
     [SerializeField] private float timeBtwAttacks;
     [SerializeField] private GameObject efectoDescarga;
     [SerializeField] private GameObject efectoLatigo;
@@ -288,7 +289,7 @@ public class PlayerMovement : MonoBehaviour
             Enemy enemigoScript = enemigosDetectados[0].GetComponent<Enemy>();
             if (enemigoScript != null)
             {
-                enemigoScript.QuitarVida(danhoAtaque);
+                enemigoScript.QuitarVida(danhoAtaqueEspecial);
                 timer = 0f;
             }
         }
