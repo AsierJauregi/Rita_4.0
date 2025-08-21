@@ -1,7 +1,7 @@
 using System.Threading;
 using UnityEngine;
 
-public class Robot_Sphere : Enemy, ICanAttack
+public class Robot_Sphere : MonoBehaviour, ICanAttack
 {
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private GameObject attackPoint;

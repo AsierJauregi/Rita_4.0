@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,14 +8,20 @@ public class PlayerLife : MonoBehaviour
     private int vida;
 
     [Header("UI")]
-    [SerializeField] private Slider healthSlider;
-    [SerializeField] private Image fillImage;
+    [SerializeField] private Image healthFill;
+
+    [Header("Damage Effect")]
+    [SerializeField] private Image damageOverlay;
+    [SerializeField] private float flashDuration;
+    [SerializeField] private Color flashColor;
+
+    private Coroutine flashRoutine;
 
     private void Start()
     {
         vida = vidaTotal;
-        healthSlider.maxValue = vidaTotal;
-        healthSlider.value = vida;
+        damageOverlay.gameObject.SetActive(true);
+        damageOverlay.color = Color.clear;  // Comienza transparente
     }
 
     public void QuitarVida()
@@ -23,6 +30,7 @@ public class PlayerLife : MonoBehaviour
         Debug.Log("Vida: " + vida);
 
         ActualizarUI();
+        FlashDamage();
 
         if (vida <= 0)
         {
@@ -32,21 +40,41 @@ public class PlayerLife : MonoBehaviour
 
     private void ActualizarUI()
     {
-        healthSlider.value = vida;
+        healthFill.fillAmount = (float) vida / vidaTotal;
 
         float t = (float) vida / vidaTotal;
 
         if (t > 0.5f)
         {
-            fillImage.color = Color.green;
+            healthFill.color = Color.green;
         }
         else if (t > 0.25)
         {
-            fillImage.color = Color.yellow;
+            healthFill.color = Color.yellow;
         }
         else
         {
-            fillImage.color = Color.red;
+            healthFill.color = Color.red;
         }
+    }
+
+    private void FlashDamage()
+    {
+        // Por si la pantalla aún sigue roja que no se solapen
+        if (flashRoutine != null)
+        {
+            StopCoroutine(flashRoutine);
+        }
+
+        flashRoutine = StartCoroutine(DamageFlashRoutine());
+    }
+
+    private IEnumerator DamageFlashRoutine()
+    {
+        damageOverlay.color = flashColor;
+
+        yield return new WaitForSeconds(flashDuration);
+
+        damageOverlay.color = Color.clear;
     }
 }
