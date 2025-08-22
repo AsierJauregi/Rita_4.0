@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -29,15 +30,21 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ataque")]
     [SerializeField] private Transform puntoAtaque;
     [SerializeField] private float radioAtaque;
+    [SerializeField] private float timeBtwAttacks;
     [SerializeField] private LayerMask queEsEnemigo;
     [SerializeField] private float danhoAtaque;
-    [SerializeField] private float danhoAtaqueEspecial;
-    [SerializeField] private float timeBtwAttacks;
     [SerializeField] private GameObject efectoDescarga;
-    [SerializeField] private GameObject efectoLatigo;
     private bool estaAtacando = false;
     private float timer = 0f;
     private float timerBool = 0f;
+
+    [Header("AtaqueEspecial")]
+    [SerializeField] private float danhoAtaqueEspecial;
+    [SerializeField] private float timeBtwAttackEspecial;
+    [SerializeField] private GameObject efectoLatigo;
+    [SerializeField] private Image barraAttEspecial;
+    private float cargaActual;
+    private bool ataqueCargado = false;
 
     [Header("Tail - Balanceo")]
     [SerializeField] private float rangoSwing;
@@ -86,10 +93,21 @@ public class PlayerMovement : MonoBehaviour
         if (estaAtacando)
         {
             timerBool += Time.deltaTime;
-            if (timerBool >= 1.5f)
+            if (timerBool >= timeBtwAttacks)
             {
                 estaAtacando = false;
                 timerBool = 0f;
+            }
+        }
+
+        if (!ataqueCargado)
+        {
+            cargaActual += Time.deltaTime;
+            barraAttEspecial.fillAmount = Mathf.Clamp01(cargaActual / timeBtwAttackEspecial);
+
+            if (cargaActual >= timeBtwAttackEspecial)
+            {
+                ataqueCargado = true;
             }
         }
 
@@ -195,8 +213,7 @@ public class PlayerMovement : MonoBehaviour
     private void Atacar()
     {
         if (seColumpia) return;
-
-        if (timer < timeBtwAttacks) return;
+        if (estaAtacando) return;
 
         estaAtacando = true;
         anim.SetTrigger("attack");
@@ -268,12 +285,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void AtaqueEspecial()
     {
-        if (timer < timeBtwAttacks) return;
+        if (!ataqueCargado) return;
 
         estaAtacando = true;
         anim.SetTrigger("tailAttack");
         Invoke(nameof(ReproducirLatigo), 1.2f);
-
+        ataqueCargado = false;
+        cargaActual = 0f;
     }
 
     public void ReproducirLatigo()

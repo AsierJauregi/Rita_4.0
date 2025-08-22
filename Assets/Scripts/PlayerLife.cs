@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class PlayerLife : MonoBehaviour
 {
     [SerializeField] private int vidaTotal;
+    [SerializeField] private CheckpointManager checkpoint;
     private int vida;
 
     [Header("UI")]
@@ -34,7 +35,9 @@ public class PlayerLife : MonoBehaviour
 
         if (vida <= 0)
         {
-            Destroy(gameObject);
+            vida = vidaTotal;
+            ActualizarUI();
+            checkpoint.Respawn();
         }
     }
 
@@ -93,4 +96,5 @@ public class PlayerLife : MonoBehaviour
 
         damageOverlay.color = Color.clear;
     }
+
 }
