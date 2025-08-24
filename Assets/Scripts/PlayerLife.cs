@@ -35,9 +35,7 @@ public class PlayerLife : MonoBehaviour
 
         if (vida <= 0)
         {
-            vida = vidaTotal;
-            ActualizarUI();
-            checkpoint.Respawn();
+            StartCoroutine(RespawnRoutine());
         }
     }
 
@@ -95,6 +93,22 @@ public class PlayerLife : MonoBehaviour
         }
 
         damageOverlay.color = Color.clear;
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        Debug.Log("Comienza el respawn");
+        // Fade out
+        yield return StartCoroutine(FindAnyObjectByType<FadeScreen>().FadeOut());
+
+        // Respawn
+        vida = vidaTotal;
+        ActualizarUI();
+        checkpoint.Respawn();
+        yield return new WaitForSeconds(0.5f);
+
+        // Fade in
+        yield return StartCoroutine(FindAnyObjectByType<FadeScreen>().FadeIn());
     }
 
 }

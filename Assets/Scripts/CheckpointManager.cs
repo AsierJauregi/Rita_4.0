@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class CheckpointManager : MonoBehaviour
 {
+    [SerializeField] private GameObject efectoCheckpoint;
+    [SerializeField] private Transform checkpointEffectPoint;
     private Transform respawnPoint;
-
+    
 
     public void Respawn()
     {
@@ -17,11 +19,9 @@ public class CheckpointManager : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider elOtro)
+    public void UpdateRespawnPoint(Transform nuevoPunto)
     {
-        if (elOtro.CompareTag("Checkpoint"))
-        {
-            respawnPoint = elOtro.transform;
-        }
+        respawnPoint = nuevoPunto;
+        Instantiate(efectoCheckpoint, checkpointEffectPoint);
     }
 }
