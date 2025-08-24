@@ -1,16 +1,60 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuPausa : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private Canvas panelPausa;
+    private bool juegoPausado;
+
     void Start()
     {
-        
+        juegoPausado = false;
+        panelPausa.gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Debug.Log("Menu");
+            if (!juegoPausado)
+            {
+                Pausar();
+            }
+            else
+            {
+                Reanudar();
+            }
+        }
+    }
+
+    private void Pausar()
+    {
+        panelPausa.gameObject.SetActive(true);
+        juegoPausado = true;
+        Time.timeScale = 0f;  // Se para el juego
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void Reanudar()
+    {
+        panelPausa.gameObject.SetActive(false);
+        juegoPausado = false;
+        Time.timeScale = 1f; // Se reanuda el juego
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void MenuPrincipal()
+    {
+        //Time.timeScale = 1f;
+        SceneManager.LoadScene("MenuPrincipal");
+    }
+    
+    public void SalirDelJuego()
+    {
+        Application.Quit();
+        Debug.Log("Saliendo del juego");
     }
 }
