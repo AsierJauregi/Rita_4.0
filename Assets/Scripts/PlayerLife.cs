@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,7 +90,7 @@ public class PlayerLife : MonoBehaviour
         {
             timer += Time.deltaTime;
             float alpha = Mathf.Lerp(0, 0.5f, timer / (flashDuration / 2f));  // alpha va de 0 a 0.5 de opacidad
-            damageOverlay.color = new Color(1, 0, 0, alpha);
+            damageOverlay.color = new Color(0.35f, 0.08f, 0.12f, alpha);
             yield return null;
         }
 
@@ -99,7 +100,7 @@ public class PlayerLife : MonoBehaviour
         {
             timer += Time.deltaTime;
             float alpha = Mathf.Lerp(0.5f, 0, timer / (flashDuration / 2f));  // efecto contrario
-            damageOverlay.color = new Color(1, 0, 0, alpha);
+            damageOverlay.color = new Color(0.35f, 0.08f, 0.12f, alpha);
             yield return null;
         }
 
