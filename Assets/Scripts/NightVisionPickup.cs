@@ -2,7 +2,13 @@ using UnityEngine;
 
 public class NightVisionPickup : MonoBehaviour, IInteractuable
 {
-
+    private void Start()
+    {
+        if (SaveSystem.CargarGafas())
+        {
+            Destroy(gameObject);
+        }
+    }
     public void Interact(GameObject interactor)
     {
         Debug.Log("Cojo el objeto");

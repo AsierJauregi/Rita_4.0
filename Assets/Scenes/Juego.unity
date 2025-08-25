@@ -1101,6 +1101,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4105989960478491133, guid: 654690957b4798246b2339891f6bedd5, type: 3}
       insertIndex: 6
       addedObject: {fileID: 1139084807}
+    - targetCorrespondingSourceObject: {fileID: 4105989960478491133, guid: 654690957b4798246b2339891f6bedd5, type: 3}
+      insertIndex: 7
+      addedObject: {fileID: 1139084808}
   m_SourcePrefab: {fileID: 100100000, guid: 654690957b4798246b2339891f6bedd5, type: 3}
 --- !u!1 &827933134 stripped
 GameObject:
@@ -1749,6 +1752,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelPausa: {fileID: 1582712536}
+--- !u!114 &1139084808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827933134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 721d1c9c0063d1d49a8171e724a0b3a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1142529283
 GameObject:
   m_ObjectHideFlags: 0
@@ -3439,7 +3454,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3244798640703648600, guid: 6c2fa311627b10949b3d1ba0545b0347, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -172
+      value: -167.16
       objectReference: {fileID: 0}
     - target: {fileID: 3244798640703648600, guid: 6c2fa311627b10949b3d1ba0545b0347, type: 3}
       propertyPath: m_LocalPosition.y

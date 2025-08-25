@@ -9,7 +9,7 @@ public class NightVisionManager : MonoBehaviour
     [SerializeField] private Volume darknessVolume;
     [SerializeField] private Image iconoVisionNocturna;
 
-    [SerializeField] private bool tieneGafas = false;
+    private bool tieneGafas = false;
     private bool nightVisionOn = false;
     private bool enZonaOscura = false;
 
@@ -29,6 +29,20 @@ public class NightVisionManager : MonoBehaviour
         {
             darknessVolume.gameObject.SetActive(true);
             darknessVolume.enabled = false;
+        }
+
+        if (SaveSystem.HayCheckpoint())
+        {
+            tieneGafas = SaveSystem.CargarGafas();
+        }
+        
+    }
+
+    private void Update()
+    {
+        if (tieneGafas)
+        {
+            iconoVisionNocturna.gameObject.SetActive(true);
         }
     }
 
@@ -79,6 +93,10 @@ public class NightVisionManager : MonoBehaviour
     public void RecogerGafas()
     {
         tieneGafas = true;
-        iconoVisionNocturna.gameObject.SetActive(true);
+    }
+
+    public bool TieneGafas()
+    {
+        return tieneGafas;
     }
 }

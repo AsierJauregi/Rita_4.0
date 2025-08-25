@@ -23,6 +23,17 @@ public class PlayerLife : MonoBehaviour
         vida = vidaTotal;
         damageOverlay.gameObject.SetActive(true);
         damageOverlay.color = Color.clear;  // Comienza transparente
+
+        // Para cargar la posicion si fuera necesario
+        if (SaveSystem.HayCheckpoint())
+        {
+            vida = SaveSystem.CargarVida();
+            ActualizarUI();
+        }
+        else
+        {
+            vida = vidaTotal;
+        }
     }
 
     public void QuitarVida()
@@ -111,4 +122,9 @@ public class PlayerLife : MonoBehaviour
         yield return StartCoroutine(FindAnyObjectByType<FadeScreen>().FadeIn());
     }
 
+    public int GetVida()
+    {
+        // Para luego cargar la partida
+        return vida;
+    }
 }

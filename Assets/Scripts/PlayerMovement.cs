@@ -84,6 +84,12 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
+        
+        // Para cargar la posicion si fuera necesario
+        if (SaveSystem.HayCheckpoint())
+        {
+            transform.position = SaveSystem.CargarCheckpoint();
+        }
     }
 
     void Update()
