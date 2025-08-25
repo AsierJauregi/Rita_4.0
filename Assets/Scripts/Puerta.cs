@@ -7,6 +7,7 @@ public class Puerta : MonoBehaviour
     [SerializeField] private Transform posicionCerrada;
 
     private Transform posicionPuerta;
+    public bool movimientoCompletado = true;
 
     void Start()
     {
@@ -18,7 +19,15 @@ public class Puerta : MonoBehaviour
 
     void Update()
     {
-        transform.localPosition = Vector3.MoveTowards(transform.localPosition, posicionPuerta.position, velocidad *  Time.deltaTime);
+        if (transform.position != posicionPuerta.position)
+        {
+            movimientoCompletado = false;
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, posicionPuerta.position, velocidad * Time.deltaTime);
+        }
+        else
+        {
+            movimientoCompletado = true;
+        }
     }
 
     public void Abrir()

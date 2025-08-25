@@ -1,38 +1,51 @@
+using System.Collections;
 using UnityEngine;
 
 public class Palanca : MonoBehaviour, IInteractuable
 {
     [SerializeField] private Puerta puertaAsociada;
-    [SerializeField] private Transform basePalanca;
-    private bool activada = false;
+    [SerializeField] private float smoothSpeed;
 
+    private bool activada = false;
+    private Quaternion targetRotation;
+    private Coroutine rotateRoutine;
+
+    private void Start()
+    {
+        targetRotation = transform.localRotation;  // Con locales
+    }
     public void Interact(GameObject interactor)
     {
+        if (!puertaAsociada.movimientoCompletado) return;  // Si está rotando no se hace nada
+
         activada = !activada;  // Cambio el estado
 
         if (activada)
         {
-            Debug.Log("Palanca activada");
             puertaAsociada.Abrir();
+            targetRotation = Quaternion.Euler(0, 0, 45f);
         }
         else
         {
-            Debug.Log("Palanca desactivada");
             puertaAsociada.Cerrar();
+            targetRotation = Quaternion.Euler(0, 0, 0f);
         }
 
-        RotarPalanca();
+        rotateRoutine = StartCoroutine(SmoothRotate());
     }
 
-    private void RotarPalanca()
+
+    private IEnumerator SmoothRotate()
     {
-        if (activada)
+        Quaternion startRot = transform.localRotation;
+
+        float elapsed = 0f;  // Para almacenar lo transcurrido
+
+        while (elapsed < 1f)
         {
-            transform.RotateAround(basePalanca.position, Vector3.forward, 45f);
-        }
-        else
-        {
-            transform.RotateAround(basePalanca.position, Vector3.forward, -45f);
+            elapsed += Time.deltaTime * smoothSpeed;
+            transform.localRotation = Quaternion.Slerp(startRot, targetRotation, elapsed);
+            yield return null;
         }
     }
 
