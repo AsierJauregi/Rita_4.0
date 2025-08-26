@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 public class LaserBehaviour : MonoBehaviour
 {
     [SerializeField] private float speed;
-    [SerializeField] private string playerTag;
+    private PlayerLife player;
 
     // Update is called once per frame
     void Update()
@@ -12,12 +12,12 @@ public class LaserBehaviour : MonoBehaviour
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider elOtro)
     {
-        Debug.Log(other.gameObject.name + " ha sido impactado");
-       if (other.gameObject.CompareTag(playerTag))
+       if (elOtro.gameObject.GetComponent<PlayerLife>())
         {
-            Debug.Log("Rita hit");
+            player = elOtro.gameObject.GetComponent<PlayerLife>();
+            player.QuitarVida();
             Destroy(gameObject);
         }
     }

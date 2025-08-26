@@ -17,6 +17,7 @@ public class Robot_Sphere : MonoBehaviour, ICanAttack
         if (lockedOn)
         {
             LookAtTarget();
+            
             timer += Time.deltaTime;
             if (timer > attackCooldown)
             {
@@ -35,12 +36,14 @@ public class Robot_Sphere : MonoBehaviour, ICanAttack
     public void Attack()
     {
         Instantiate(laserPrefab, attackPoint.transform.position, Quaternion.LookRotation(playerLocation.position + targetingCorrection - attackPoint.transform.position));
-        Debug.Log("Shoot");
+        Debug.Log("distancia: " + Vector3.Distance(transform.position, playerLocation.position));
     }
 
     public void StopAttacking()
     {
-
+        lockedOn = false;
+        playerLocation = null;
+        timer = 0f;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -60,7 +63,8 @@ public class Robot_Sphere : MonoBehaviour, ICanAttack
     {
         if (other.gameObject.CompareTag(playerTag))
         {
-            lockedOn = false;
+            //lockedOn = false;
+            StopAttacking();
         }
     }
 }

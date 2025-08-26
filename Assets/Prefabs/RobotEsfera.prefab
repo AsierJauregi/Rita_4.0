@@ -188,12 +188,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7388f8f3781c6cc4cb05d087b1ad16d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 100
   laserPrefab: {fileID: 1314497179628204458, guid: 3f37374326c07fd479266da2354cc463, type: 3}
   attackPoint: {fileID: 5020531279920358990}
   targetingCorrection: {x: 0, y: 0.5, z: 0}
   playerTag: Player
   attackCooldown: 1
+  maxDetectionDistance: 12
 --- !u!1001 &7512384553362922660
 PrefabInstance:
   m_ObjectHideFlags: 0

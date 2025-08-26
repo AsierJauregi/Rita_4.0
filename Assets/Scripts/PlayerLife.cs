@@ -53,9 +53,9 @@ public class PlayerLife : MonoBehaviour
 
     private void ActualizarUI()
     {
-        healthFill.fillAmount = (float) vida / vidaTotal;
+        healthFill.fillAmount = (float)vida / vidaTotal;
 
-        float t = (float) vida / vidaTotal;
+        float t = (float)vida / vidaTotal;
 
         if (t > 0.5f)
         {
@@ -109,7 +109,8 @@ public class PlayerLife : MonoBehaviour
 
     private IEnumerator RespawnRoutine()
     {
-        Debug.Log("Comienza el respawn");
+        StopRobots();
+
         // Fade out
         yield return StartCoroutine(FindAnyObjectByType<FadeScreen>().FadeOut());
 
@@ -127,5 +128,15 @@ public class PlayerLife : MonoBehaviour
     {
         // Para luego cargar la partida
         return vida;
+    }
+
+    private void StopRobots()
+    {
+        // Para parar a los robots si matan al player
+        var robots = FindObjectsByType<Robot_Sphere>(FindObjectsSortMode.None);
+        foreach (var bot in robots)
+        {
+            bot.StopAttacking();
+        }
     }
 }
