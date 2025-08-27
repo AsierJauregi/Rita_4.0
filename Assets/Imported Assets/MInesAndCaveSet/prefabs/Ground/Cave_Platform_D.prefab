@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9190471173695136864}
   - component: {fileID: 8545860368309183966}
   - component: {fileID: 460106589392402377}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cave_Platform_D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,6 +59,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
