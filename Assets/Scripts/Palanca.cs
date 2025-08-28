@@ -1,10 +1,12 @@
 using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class Palanca : MonoBehaviour, IInteractuable
 {
     [SerializeField] private Puerta puertaAsociada;
     [SerializeField] private float smoothSpeed;
+
 
     private bool activada = false;
     private Quaternion targetRotation;
