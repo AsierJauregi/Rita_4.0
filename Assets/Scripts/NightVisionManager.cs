@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -20,6 +21,10 @@ public class NightVisionManager : MonoBehaviour
         inputManager.OnVisionNocturna += VisionNocturna;
     }
 
+    public void Awake()
+    {
+        objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
+    }
     private void Start()
     {
         if (nightVisionVolume != null)
@@ -38,7 +43,8 @@ public class NightVisionManager : MonoBehaviour
             tieneGafas = SaveSystem.CargarGafas();
         }
 
-        objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
+        //StartCoroutine(BuscarObjetos());
+        //objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
     }
 
     private void Update()
@@ -47,6 +53,12 @@ public class NightVisionManager : MonoBehaviour
         {
             iconoVisionNocturna.gameObject.SetActive(true);
         }
+    }
+
+    private IEnumerator BuscarObjetos()
+    {
+        yield return new WaitForSeconds(1);
+        objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
     }
 
     private void VisionNocturna()

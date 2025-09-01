@@ -10,6 +10,7 @@ public class Puerta : MonoBehaviour
 
     private Transform posicionPuerta;
     public bool movimientoCompletado = true;
+    private bool puertaAbierta = false;
 
     void Start()
     {
@@ -23,7 +24,11 @@ public class Puerta : MonoBehaviour
     {
         if (transform.position != posicionPuerta.position)
         {
-            camPuerta.Priority = 20;
+            if (camPuerta != null)
+            {
+                camPuerta.Priority = 20;
+            }
+
             movimientoCompletado = false;
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, posicionPuerta.position, velocidad * Time.deltaTime);
         }
@@ -34,14 +39,19 @@ public class Puerta : MonoBehaviour
         }
     }
 
-    public void Abrir()
-    {
-        posicionPuerta = posicionAbierta;
-    }
 
-    public void Cerrar()
+    public void AbrirCerrar()
     {
-        posicionPuerta = posicionCerrada;
+        puertaAbierta = !puertaAbierta;
+
+        if (puertaAbierta)
+        {
+            posicionPuerta = posicionAbierta;
+        }
+        else
+        {
+            posicionPuerta = posicionCerrada;
+        }
     }
 
 }

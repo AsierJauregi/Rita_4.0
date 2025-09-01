@@ -24,14 +24,14 @@ public class Palanca : MonoBehaviour, IInteractuable
 
         if (activada)
         {
-            puertaAsociada.Abrir();
             targetRotation = Quaternion.Euler(0, 0, 45f);
         }
         else
         {
-            puertaAsociada.Cerrar();
             targetRotation = Quaternion.Euler(0, 0, 0f);
         }
+
+        puertaAsociada.AbrirCerrar();
 
         rotateRoutine = StartCoroutine(SmoothRotate());
     }
