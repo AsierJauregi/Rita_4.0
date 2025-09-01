@@ -156,6 +156,10 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 desplazamiento = new Vector3(vx, vy, 0f) * Time.deltaTime;
         controller.Move(desplazamiento);
+        // Forzar Z = 0 para evitar resbalones en profundidad
+        Vector3 pos = transform.position;
+        pos.z = 0f;
+        transform.position = pos;
 
         // Anim y flip
         if (Mathf.Abs(direccionMovimiento.x) > 0.01f)
@@ -203,9 +207,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void AplicarGravedad()
     {
-        // gravedad al movimiento normal y al launch vertical
-        velocidadVertical.y += factorGravedad * Time.deltaTime;
-        launchVelocity.y += factorGravedad * Time.deltaTime;
+        // Solo aplico la gravedad cuando dejo de tocar el suelo para evitar que se vaya acumulando y caiga de forma brusca
+        if (!EstoyEnSuelo())
+        {
+            velocidadVertical.y += factorGravedad * Time.deltaTime;
+            launchVelocity.y += factorGravedad * Time.deltaTime;
+        }
     }
 
     private bool EstoyEnSuelo()
@@ -446,5 +453,3 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
-
-

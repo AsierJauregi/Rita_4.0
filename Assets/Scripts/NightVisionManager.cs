@@ -13,6 +13,8 @@ public class NightVisionManager : MonoBehaviour
     private bool nightVisionOn = false;
     private bool enZonaOscura = false;
 
+    private ObjetosVisionNocturna[] objetosVision;
+
     private void OnEnable()
     {
         inputManager.OnVisionNocturna += VisionNocturna;
@@ -35,7 +37,8 @@ public class NightVisionManager : MonoBehaviour
         {
             tieneGafas = SaveSystem.CargarGafas();
         }
-        
+
+        objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
     }
 
     private void Update()
@@ -59,6 +62,11 @@ public class NightVisionManager : MonoBehaviour
         if (nightVisionVolume != null)
         {
             nightVisionVolume.enabled = nightVisionOn;  // se pone true o false en funcion del bool
+        }
+
+        foreach (var obj in objetosVision)
+        {
+            obj.ActualizarVision(nightVisionOn);
         }
     }
 
