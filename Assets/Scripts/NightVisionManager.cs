@@ -10,21 +10,23 @@ public class NightVisionManager : MonoBehaviour
     [SerializeField] private Volume darknessVolume;
     [SerializeField] private Image iconoVisionNocturna;
 
+    [Header("TutorialCard")]
+    [SerializeField] private TutorialCard tutorialCard;
+    [SerializeField] private Sprite imagen;
+    [TextArea]
+    [SerializeField] private string mensaje;
+
     private bool tieneGafas = false;
     private bool nightVisionOn = false;
     private bool enZonaOscura = false;
 
-    private ObjetosVisionNocturna[] objetosVision;
 
     private void OnEnable()
     {
         inputManager.OnVisionNocturna += VisionNocturna;
     }
 
-    public void Awake()
-    {
-        objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
-    }
+
     private void Start()
     {
         if (nightVisionVolume != null)
@@ -43,8 +45,6 @@ public class NightVisionManager : MonoBehaviour
             tieneGafas = SaveSystem.CargarGafas();
         }
 
-        //StartCoroutine(BuscarObjetos());
-        //objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
     }
 
     private void Update()
@@ -55,11 +55,6 @@ public class NightVisionManager : MonoBehaviour
         }
     }
 
-    private IEnumerator BuscarObjetos()
-    {
-        yield return new WaitForSeconds(1);
-        objetosVision = FindObjectsByType<ObjetosVisionNocturna>(FindObjectsSortMode.None);
-    }
 
     private void VisionNocturna()
     {
@@ -76,10 +71,6 @@ public class NightVisionManager : MonoBehaviour
             nightVisionVolume.enabled = nightVisionOn;  // se pone true o false en funcion del bool
         }
 
-        foreach (var obj in objetosVision)
-        {
-            obj.ActualizarVision(nightVisionOn);
-        }
     }
 
     public void EntrarZonaOscura()
@@ -113,6 +104,7 @@ public class NightVisionManager : MonoBehaviour
     public void RecogerGafas()
     {
         tieneGafas = true;
+        tutorialCard.Mostrar(imagen, mensaje);
     }
 
     public bool TieneGafas()
