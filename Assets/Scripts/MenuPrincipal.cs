@@ -9,6 +9,7 @@ public class MenuPrincipal : MonoBehaviour
     [SerializeField] private Image fadeImage;
     private float fadeDuration = 1f;
 
+
     private void Start()
     {
         StartCoroutine(FadeIn());

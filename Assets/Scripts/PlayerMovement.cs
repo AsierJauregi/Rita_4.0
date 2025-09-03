@@ -64,6 +64,13 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 launchVelocity = Vector3.zero;
     [SerializeField] private float launchDrag;
 
+    [Header("Sonido")]
+    [SerializeField] private AudioSource sonidoPisadas;
+    [SerializeField] private AudioSource sonidoAtaque;
+    [SerializeField] private AudioSource sonidoAtaqueEspecial;
+    [SerializeField] private AudioSource sonidoBalanceo;
+    
+
     private void OnEnable()
     {
         inputManager.OnSaltar += Saltar;
@@ -167,10 +174,23 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("running", true);
             if (direccionMovimiento.x > 0) transform.eulerAngles = Vector3.zero;
             else transform.eulerAngles = new Vector3(0, 180, 0);
+
+            //Sonido
+            if (EstoyEnSuelo())
+            {
+                if (!sonidoPisadas.isPlaying) sonidoPisadas.Play();
+            }
+            else
+            {
+                if (sonidoPisadas.isPlaying) sonidoPisadas.Stop();
+            }
+            
         }
         else
         {
             anim.SetBool("running", false);
+
+            if (sonidoPisadas.isPlaying) sonidoPisadas.Stop();
         }
 
         // Si estamos en suelo y cayendo, reseteamos vertical
@@ -239,6 +259,7 @@ public class PlayerMovement : MonoBehaviour
         if (efectoDescarga) 
         {
             Instantiate(efectoDescarga, puntoAtaque.position, Quaternion.identity);
+            sonidoAtaque.Play();
         }
 
         Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
@@ -268,6 +289,8 @@ public class PlayerMovement : MonoBehaviour
                 swingPoint = puntos[0].transform;
                 seColumpia = true;
                 anim.SetBool("isSwinging", true);
+
+                if (!sonidoBalanceo.isPlaying) sonidoBalanceo.Play();
 
                 swingLength = Vector3.Distance(transform.position, swingPoint.position);
                 if (swingLength < 0.2f) swingLength = 0.5f;
@@ -312,6 +335,7 @@ public class PlayerMovement : MonoBehaviour
         if (efectoLatigo)
         {
             Instantiate(efectoLatigo, puntoAtaque.position, Quaternion.Euler(0, 0, -90));
+            sonidoAtaqueEspecial.Play();
         }
 
         Collider[] enemigosDetectados = Physics.OverlapSphere(puntoAtaque.position, radioAtaque, queEsEnemigo);
@@ -335,6 +359,7 @@ public class PlayerMovement : MonoBehaviour
         {
             seColumpia = false;
             anim.SetBool("isSwinging", false);
+            if (sonidoBalanceo.isPlaying) sonidoBalanceo.Stop();
             return;
         }
 
@@ -418,6 +443,7 @@ public class PlayerMovement : MonoBehaviour
         // limpiar estado de swing
         seColumpia = false;
         anim.SetBool("isSwinging", false);
+        if (sonidoBalanceo.isPlaying) sonidoBalanceo.Stop();
         swingPoint = null;
         swingLength = 0f;
         swingAngle = 0f;

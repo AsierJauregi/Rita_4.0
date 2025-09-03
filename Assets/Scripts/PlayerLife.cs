@@ -17,6 +17,9 @@ public class PlayerLife : MonoBehaviour
     [SerializeField] private float flashDuration;
     [SerializeField] private Color flashColor;
 
+    [Header("Sonido")]
+    [SerializeField] private AudioSource sonidoVida;
+
     private Coroutine flashRoutine;
 
     private void Start()
@@ -44,6 +47,7 @@ public class PlayerLife : MonoBehaviour
 
         ActualizarUI();
         FlashDamage();
+        sonidoVida.Play();
 
         if (vida <= 0)
         {

@@ -5,6 +5,9 @@ public class CheckpointManager : MonoBehaviour
     [SerializeField] private GameObject efectoCheckpoint;
     [SerializeField] private Transform checkpointEffectPoint;
     private Transform respawnPoint;
+
+    [Header("Sonido")]
+    [SerializeField] private AudioSource sonidoCheckpoint;
     
 
     public void Respawn()
@@ -23,5 +26,6 @@ public class CheckpointManager : MonoBehaviour
     {
         respawnPoint = nuevoPunto;
         Instantiate(efectoCheckpoint, checkpointEffectPoint);
+        sonidoCheckpoint.Play();
     }
 }

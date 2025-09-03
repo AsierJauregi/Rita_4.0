@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2865955014250320189}
   - component: {fileID: 2413333106277601229}
   m_Layer: 0
-  m_Name: RespawnEffecr
+  m_Name: RespawnEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

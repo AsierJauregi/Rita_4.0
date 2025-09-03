@@ -6,6 +6,8 @@ public class MenuPausa : MonoBehaviour
     [SerializeField] private Canvas panelPausa;
     private bool juegoPausado;
 
+    [SerializeField] private AudioSource sonidoMenu;
+
     void Start()
     {
         juegoPausado = false;
@@ -35,6 +37,7 @@ public class MenuPausa : MonoBehaviour
         Time.timeScale = 0f;  // Se para el juego
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        sonidoMenu.Play();
     }
 
     public void Reanudar()
@@ -44,6 +47,7 @@ public class MenuPausa : MonoBehaviour
         Time.timeScale = 1f; // Se reanuda el juego
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        sonidoMenu.Play();
     }
 
     public void MenuPrincipal()
